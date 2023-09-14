@@ -9,7 +9,7 @@
 <template>
   <VApp>
     <VCard>
-      <VLaoyut>
+      <VLayout>
 
         <VRow>
           <VCol cols="3">
@@ -36,7 +36,7 @@
           </VCol>
         </VRow>
 
-      </VLaoyut>
+      </VLayout>
     </VCard>
   </VApp>
 </template>

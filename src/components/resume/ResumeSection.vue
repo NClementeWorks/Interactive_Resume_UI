@@ -46,7 +46,7 @@
         :key="item.id"
         :item="item"
         ></component>
-        
+
     </VCardText>
 
   </VCard>
