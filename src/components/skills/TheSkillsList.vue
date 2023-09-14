@@ -1,14 +1,18 @@
 <!-- TheSkillsList -->
 
 <script setup>
+  import ExpandibleTree from '@/components/blocks/tree/ExpandibleTree.vue'
   import { useSkills } from '@/composables/skills.composable'
+
   const skills = useSkills ()
 </script>
 
 <template>
-  <ul>
-    <li v-for="skill in skills.data" :key="skill.id">
-      {{ skills.get_primary_name ( skill ) }}
-    </li>
-  </ul>
+  <ExpandibleTree
+    :items="skills.tree"
+    >
+    <template #label="{ content }">
+      {{ skills.get_primary_name ( content ) }}
+    </template>
+  </ExpandibleTree>
 </template>

@@ -10,9 +10,9 @@
   <VApp>
     <VCard>
       <VLaoyut>
-        
+
         <VRow>
-          <VCol cols="2">
+          <VCol cols="3">
 
             <VCard>
               <VCardTitle>

@@ -3,11 +3,13 @@ import { useSkillsStore } from '@/stores/skills'
 export const useSkills = () => {
 
   const skills_store = useSkillsStore ()
+  console.log('skills_store.skills_tree_root',skills_store.skills_tree_root)
 
   return {
 
     data: skills_store.skills,
-
+    tree: skills_store.skills_tree_root,
+    
     get_primary_name: ( skill ) => skill.names [ skill.primary_name ],
 
     scan_skills: ( text ) => {
@@ -17,7 +19,6 @@ export const useSkills = () => {
       const all_skill_names = skills_store.skills
         .flatMap ( skill => skill.names.map ( name => ({ name, skill }) ) )
         .sort( ( n1, n2 ) => n2?.name.length - n1?.name.length )
-      console.log('all_skill_names', all_skill_names)
 
       all_skill_names.forEach( skill_name => {
         let skill_name_regex = new RegExp ( `\\b${ skill_name.name.trim () }\\b`, 'g' )
@@ -27,6 +28,8 @@ export const useSkills = () => {
         )
       })
 
+      return new_text
+      
       /* loop strategy */
       /* replaced with match strategy
         NC 23-9-14
@@ -49,7 +52,6 @@ export const useSkills = () => {
       //   else
       //     new_text += token
       // })
-      return new_text
     }
 
   }
