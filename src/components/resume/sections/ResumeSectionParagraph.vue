@@ -1,6 +1,8 @@
 <!-- ResumeSectionParagraph -->
 
 <script setup>
+  import TipTap from '@/components/blocks/editor/TipTap.vue'
+
   import { useSkills } from '@/composables/skills.composable'
   import { computed, toRefs } from "vue"
 
@@ -24,4 +26,11 @@
 
 <template>
   <p v-html="scanned_text"></p>
+
+  <VDivider class="my-8"></VDivider>
+
+  <TipTap
+    v-model="scanned_text"
+    />
+
 </template>

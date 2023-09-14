@@ -24,7 +24,7 @@ export const useSkills = () => {
         let skill_name_regex = new RegExp ( `\\b${ skill_name.name.trim () }\\b`, 'g' )
         new_text = new_text.replace (
           skill_name_regex,
-          `<span class="skill skill_${ skill_name.skill.id }">${ skill_name.name }</span>`
+          `<span data-type="skill_span" class="skill skill_${ skill_name.skill.id }">${ skill_name.name }</span>`
         )
       })
 
