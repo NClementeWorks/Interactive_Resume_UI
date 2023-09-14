@@ -1,18 +1,25 @@
 <!-- ResumeSectionExperience -->
 
 <script setup>
-import { toRefs } from "vue"
+  import { useSkills } from '@/composables/skills.composable'
+  import { computed, toRefs } from "vue"
+  
+  const skills = useSkills ()
 
-const props = defineProps ({
-  item: {
-    type: Object,
-    default: null,
-  }
-})
+  const props = defineProps ({
+    item: {
+      type: Object,
+      default: null,
+    }
+  })
 
-const {
-  item
-} = toRefs ( props )
+  const {
+    item
+  } = toRefs ( props )
+
+  const scanned_text = computed (() => 
+    skills.scan_skills( item.value?.html_text )
+  )
 </script>
 
 <template>
@@ -21,5 +28,5 @@ const {
   <div>{{ item.dates.from }} – {{ item.dates.to }}</div>
   <div>{{ item.location }}</div>
   
-  <div v-html="item.html_text"></div>
+  <div v-html="scanned_text"></div>
 </template>
