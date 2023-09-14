@@ -1,23 +1,15 @@
 <!--TipTap  -->
 <script setup>
-  import { useEditor, EditorContent } from '@tiptap/vue-3'
+  import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
   import StarterKit from '@tiptap/starter-kit'
-  // import Document from '@tiptap/extension-document'
-  // import Paragraph from '@tiptap/extension-paragraph'
-  // import Text from '@tiptap/extension-text'
-  // import Heading from '@tiptap/extension-heading'
-  // import Bold from '@tiptap/extension-bold'
-  // import Italic from '@tiptap/extension-italic'
   import Underline from '@tiptap/extension-underline'
   import Superscript from '@tiptap/extension-superscript'
   import TextAlign from '@tiptap/extension-text-align'
   import TextStyle from '@tiptap/extension-text-style'
-  // import History from '@tiptap/extension-history'
-  // import HardBreak from '@tiptap/extension-hard-break'
 
   import SkillSpan from '@/components/blocks/editor/skills/SkillSpanTiptapNode.js'
   
-  import { computed, onBeforeUnmount, toRefs, watch } from 'vue'
+  import { onBeforeUnmount, toRefs, watch } from 'vue'
 
   const props = defineProps ({
     modelValue: {
@@ -53,39 +45,18 @@
 
   const emit = defineEmits ([
     'update:modelValue',
-    'transaction:paragraph',
+    'create:skill',
   ])
 
   const editor = useEditor ({
     extensions: [
       StarterKit,
-      // Document.extend({
-      //   content: 'skill_span+',
-      // }),
-      // ...props.customNodes,
-      // Paragraph,
       SkillSpan,
-      // Text,
-      // Heading,
-      // Bold,
-      // Italic,
 
       Underline,
       Superscript,
       TextAlign,
-      // .configure({
-      //   types: ['paragraph'],
-      // }),
       TextStyle,
-      // History,
-      // HardBreak,
-    //   .extend({
-    //   addKeyboardShortcuts () {
-    //     return {
-    //       Enter: () => this.editor.commands.setHardBreak()
-    //     }
-    //   }
-    // })
     ],
     content: props.modelValue,
     onUpdate: () => {
@@ -104,103 +75,77 @@
     editor.value.destroy()
   })
 
-  const bubble_menu_options = [
-    {
-      action: 'bold',
-      editor_action: 'toggleBold',
-    }, {
-      action: 'italic',
-      editor_action: 'toggleItalic',
-    }, {
-      action: 'underline',
-      editor_action: 'toggleUnderline',
-    }, {
-      action: 'superscript',
-      editor_action: 'toggleSuperscript',
-    }, {
-      icon: 'align-left',
-      action: 'left',
-      editor_action: 'setTextAlign',
-      is_active: { textAlign: 'left' },
-    }, {
-      icon: 'align-center',
-      action: 'center',
-      editor_action: 'setTextAlign',
-      is_active: { textAlign: 'center' },
-    }, {
-      icon: 'align-right',
-      action: 'right',
-      editor_action: 'setTextAlign',
-      is_active: { textAlign: 'right' },
-    }, {
-      icon: 'align-justify',
-      action: 'justify',
-      editor_action: 'setTextAlign',
-      is_active: { textAlign: 'justify' },
-    },
-  ]
+  // const bubble_menu_options = [
+  //   {
+  //     action: 'bold',
+  //     editor_action: 'toggleBold',
+  //   }, {
+  //     action: 'italic',
+  //     editor_action: 'toggleItalic',
+  //   }, {
+  //     action: 'underline',
+  //     editor_action: 'toggleUnderline',
+  //   }, {
+  //     action: 'superscript',
+  //     editor_action: 'toggleSuperscript',
+  //   }, {
+  //     icon: 'align-left',
+  //     action: 'left',
+  //     editor_action: 'setTextAlign',
+  //     is_active: { textAlign: 'left' },
+  //   }, {
+  //     icon: 'align-center',
+  //     action: 'center',
+  //     editor_action: 'setTextAlign',
+  //     is_active: { textAlign: 'center' },
+  //   }, {
+  //     icon: 'align-right',
+  //     action: 'right',
+  //     editor_action: 'setTextAlign',
+  //     is_active: { textAlign: 'right' },
+  //   }, {
+  //     icon: 'align-justify',
+  //     action: 'justify',
+  //     editor_action: 'setTextAlign',
+  //     is_active: { textAlign: 'justify' },
+  //   },
+  // ]
 
-  const bubble_menu_heading_options = [ 0, 2, 3, 4, 5, 6 ]
-    .map ( option => ({
-      name: option == 0 ? 'Paragraph' : `H${option}`,
-      level: option,
-    }))
-  const current_heading = computed ( () => {
-    return bubble_menu_heading_options
-      .find ( option => editor.value?.isActive ( 'heading', { level: option.level } ) )
-      || bubble_menu_heading_options [ 0 ]
-  })
+  function skill_from_selection () {
+    let selection = window.getSelection()
+    console.log('skill_from_selection :: selection', selection )
+    
+    // TODO: refine selection when accross multiple nodes
+    if ( selection.anchorNode !== selection.extentNode )
+      return
+    
+    const selected_text = selection.anchorNode.textContent.substring ( selection.anchorOffset, selection.extentOffset )
+    console.log('skill_from_selection :: selected_text =>', `"${ selected_text }"` )
+    
+    emit ( 'create:skill', selected_text )
 
+    /* Tiptap selection */
+    // console.log('skill_from_selection :: selection', editor.value.view.state.selection )
+    // const selection = editor.value.view.state.selection
+    // if ( selection.empty ) return
+
+    // console.log('selection :: textContent', selection.$anchor.parent.textContent)
+    // console.log('selection :: from', selection.from)
+    // console.log('selection :: to', selection.to)
+    // const parent_offset = selection.$from.path [ selection.$from.path.length - 2 ]
+    // console.log('selection :: parent_offset', parent_offset)
+    // const selected_text = selection.$anchor.parent.textContent.substring (
+    //   selection.from - parent_offset - 1,
+    //   selection.to - parent_offset - 1
+    // )
+    // console.log('selected_text',selected_text)
+  }
 </script>
 
 <template>
 
   <div class="tiptap_wrapper">
-    <!-- <BubbleMenu
-      v-if="editor"
-      :editor="editor"
-      :tippy-options="{ duration: 100 }"
-      class="bubble_menu rounded"
-      >
-
-      <IconBtn
-        v-for="option in bubble_menu_options" :key="option.action"
-        :icon="`fas fa-${ option.icon || option.action }`"
-        class="rounded"
-        :class="{ 'is-active': editor.isActive ( option.is_active || option.action ) }"
-        @click="editor.chain ().focus () [ option.editor_action ] ( option.action ).run ()"
-        >
-      </IconBtn>
-      
-      <VSelect
-        v-model="current_heading"
-        :items="bubble_menu_heading_options"
-        item-title="name"
-        density="compact"
-        hide-details
-        >
-        <template #item="{ item }">
-          <VListItem
-            @click="item.raw.level === 0
-              ? editor.chain ().focus ().setParagraph ().run ()
-              : editor.chain ().focus ().setHeading ( { level: item.raw.level } ).run ()"
-            >
-            {{ item.value }}
-          </VListItem>
-        </template>
-      </VSelect>
-      
-      
-    </BubbleMenu> -->
-    <!-- <IconBtn
-      :icon="`fas fa-check`"
-      class="rounded"
-      @click="editor.chain ().focus () .updateAttributes ( 'paragraph', { dataReader: 'lead' } ).run ()"
-      >
-    </IconBtn> -->
-    
-    <div class="top_menu d-flex">
-      
+    <!-- <div class="top_menu d-flex">
       <VBtn
         v-for="option in bubble_menu_options" :key="option.action"
         :icon="`fas fa-${ option.icon || option.action }`"
@@ -209,31 +154,24 @@
         @click="editor?.chain ().focus () [ option.editor_action ] ( option.action ).run ()"
         >
       </VBtn>
-      
-      <VSelect
-        v-model="current_heading"
-        :items="bubble_menu_heading_options"
-        item-title="name"
-        density="compact"
-        hide-details
-        class="ml-4"
-        >
-        <template #item="{ item }">
-          <VListItem
-            @click="item.raw.level === 0
-              ? editor?.chain ().focus ().setParagraph ().run ()
-              : editor?.chain ().focus ().setHeading ( { level: item.raw.level } ).run ()"
-            >
-            {{ item.value }}
-          </VListItem>
-        </template>
-      </VSelect>
-      
-    </div>
+    </div> -->
 
     <EditorContent
       :editor="editor"
       />
+      <!-- @mouseup="tiptap_mouse_up" -->
+      
+    <BubbleMenu
+      v-if="editor"
+      :editor="editor"
+      :tippy-options="{ duration: 100 }"
+      class="bubble_menu rounded"
+      >
+      <VBtn
+        @click="skill_from_selection"
+        >Create Skill</VBtn>
+    </BubbleMenu>
+
   </div>
 </template>
 
@@ -252,8 +190,6 @@ p[data-reader="lead"]
   position: relative
   height: 100%
 
-  & > div:not(.top_menu)
-    height: 100%
 
   .tiptap
     height: 100%

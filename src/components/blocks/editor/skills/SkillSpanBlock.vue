@@ -73,6 +73,7 @@
 <style lang="sass">
 .skill_span_wrapper
   display: inline-block
+  background: #0001
 
 .skill_span_text
   display: inline-block

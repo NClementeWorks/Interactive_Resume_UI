@@ -1,6 +1,8 @@
 <!-- ResumeSectionExperience -->
 
 <script setup>
+  import TipTap from '@/components/blocks/editor/TipTap.vue'
+
   import { useSkills } from '@/composables/skills.composable'
   import { computed, toRefs } from "vue"
   
@@ -28,5 +30,9 @@
   <div>{{ item.dates.from }} – {{ item.dates.to }}</div>
   <div>{{ item.location }}</div>
   
-  <div v-html="scanned_text"></div>
+  <!-- <div v-html="scanned_text"></div> -->
+  
+  <TipTap
+    v-model="scanned_text"
+    />
 </template>
