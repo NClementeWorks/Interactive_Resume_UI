@@ -25,12 +25,7 @@
 </script>
 
 <template>
-  <p v-html="scanned_text"></p>
-
-  <VDivider class="my-8"></VDivider>
-
   <TipTap
     v-model="scanned_text"
     />
-
 </template>

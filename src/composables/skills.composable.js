@@ -1,16 +1,35 @@
 import { useSkillsStore } from '@/stores/skills'
+import { storeToRefs } from 'pinia'
 
 export const useSkills = () => {
 
   const skills_store = useSkillsStore ()
-  console.log('skills_store.skills_tree_root',skills_store.skills_tree_root)
+  const { skills, skills_tree_root, current_skill, show_skill_form } = storeToRefs ( skills_store )
 
   return {
 
-    data: skills_store.skills,
-    tree: skills_store.skills_tree_root,
+    data: skills,
+    tree: skills_tree_root,
+
+
+    show_skill_form,
+    current_skill,
+    get_new_basic_skill: ( name ) => {
+      return {
+        names: [ name ],
+        primary_name: 0,
+      }
+    },
+    save_skill: ( skill ) => {
+      skill.id = skills.value.sort ( ( a, b ) => a.id - b.id ) [ skills.value.length - 1 ].id + 1
+      skills.value.push ( skill )
+    },
     
-    get_primary_name: ( skill ) => skill.names [ skill.primary_name ],
+
+    get_primary_name: ( skill ) => {
+      return skill && skill.names [ skill.primary_name ]
+    },
+
 
     scan_skills: ( text ) => {
       let new_text = text

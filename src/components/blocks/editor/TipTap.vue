@@ -9,7 +9,10 @@
 
   import SkillSpan from '@/components/blocks/editor/skills/SkillSpanTiptapNode.js'
   
+  import { useSkills } from '@/composables/skills.composable'
   import { onBeforeUnmount, toRefs, watch } from 'vue'
+
+  const skills = useSkills ()
 
   const props = defineProps ({
     modelValue: {
@@ -74,92 +77,30 @@
   onBeforeUnmount ( () => {
     editor.value.destroy()
   })
-
-  // const bubble_menu_options = [
-  //   {
-  //     action: 'bold',
-  //     editor_action: 'toggleBold',
-  //   }, {
-  //     action: 'italic',
-  //     editor_action: 'toggleItalic',
-  //   }, {
-  //     action: 'underline',
-  //     editor_action: 'toggleUnderline',
-  //   }, {
-  //     action: 'superscript',
-  //     editor_action: 'toggleSuperscript',
-  //   }, {
-  //     icon: 'align-left',
-  //     action: 'left',
-  //     editor_action: 'setTextAlign',
-  //     is_active: { textAlign: 'left' },
-  //   }, {
-  //     icon: 'align-center',
-  //     action: 'center',
-  //     editor_action: 'setTextAlign',
-  //     is_active: { textAlign: 'center' },
-  //   }, {
-  //     icon: 'align-right',
-  //     action: 'right',
-  //     editor_action: 'setTextAlign',
-  //     is_active: { textAlign: 'right' },
-  //   }, {
-  //     icon: 'align-justify',
-  //     action: 'justify',
-  //     editor_action: 'setTextAlign',
-  //     is_active: { textAlign: 'justify' },
-  //   },
-  // ]
-
+  
   function skill_from_selection () {
     let selection = window.getSelection()
-    console.log('skill_from_selection :: selection', selection )
     
-    // TODO: refine selection when accross multiple nodes
+    // TODO: show alert - no cross node selections allowed
     if ( selection.anchorNode !== selection.extentNode )
       return
     
     const selected_text = selection.anchorNode.textContent.substring ( selection.anchorOffset, selection.extentOffset )
     console.log('skill_from_selection :: selected_text =>', `"${ selected_text }"` )
     
+    skills.show_skill_form.value = true
+    skills.current_skill.value = skills.get_new_basic_skill ( selected_text )
     emit ( 'create:skill', selected_text )
-
-    /* Tiptap selection */
-    // console.log('skill_from_selection :: selection', editor.value.view.state.selection )
-    // const selection = editor.value.view.state.selection
-    // if ( selection.empty ) return
-
-    // console.log('selection :: textContent', selection.$anchor.parent.textContent)
-    // console.log('selection :: from', selection.from)
-    // console.log('selection :: to', selection.to)
-    // const parent_offset = selection.$from.path [ selection.$from.path.length - 2 ]
-    // console.log('selection :: parent_offset', parent_offset)
-    // const selected_text = selection.$anchor.parent.textContent.substring (
-    //   selection.from - parent_offset - 1,
-    //   selection.to - parent_offset - 1
-    // )
-    // console.log('selected_text',selected_text)
   }
 </script>
 
 <template>
 
   <div class="tiptap_wrapper">
-    <!-- <div class="top_menu d-flex">
-      <VBtn
-        v-for="option in bubble_menu_options" :key="option.action"
-        :icon="`fas fa-${ option.icon || option.action }`"
-        class="rounded"
-        :class="{ 'is-active': editor?.isActive ( option.is_active || option.action ) }"
-        @click="editor?.chain ().focus () [ option.editor_action ] ( option.action ).run ()"
-        >
-      </VBtn>
-    </div> -->
 
     <EditorContent
       :editor="editor"
       />
-      <!-- @mouseup="tiptap_mouse_up" -->
       
     <BubbleMenu
       v-if="editor"

@@ -9,7 +9,7 @@
 
 <template>
   <ExpandibleTree
-    :items="skills.tree"
+    :items="skills.tree.value"
     >
     <template #label="{ content }">
       {{ skills.get_primary_name ( content ) }}
