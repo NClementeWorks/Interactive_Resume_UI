@@ -4,6 +4,7 @@
   import TheResumeHeader from '@/components/resume/TheResumeHeader.vue'
   import ResumeSection from '@/components/resume/ResumeSection.vue'
   import SkillForm from '@/components/skills/SkillForm.vue'
+  import DialogBox from '@/components/blocks/dialog/DialogBox.vue'
   
   import { useResume } from '@/composables/resume.composable'
   import { useSkills } from '@/composables/skills.composable'
@@ -24,19 +25,13 @@
     :section="section"
     />
 
-  <VDialog
-    v-model="skills.show_skill_form.value"
-    width="auto"
+  <!-- Skill Form -->
+  <DialogBox
+    :show="skills.show_skill_form.value"
+    title="Skill"
     >
-    <VCard>
-      <VCardTitle>
-        Skill
-      </VCardTitle>
-      <VCardText>
-        <SkillForm
-          />
-      </VCardText>
-    </VCard>
-  </VDialog>
+    <SkillForm
+      />
+  </DialogBox>
 
 </template>
