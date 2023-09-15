@@ -151,8 +151,16 @@ p[data-reader="lead"]
   
 .bubble_menu
   background: black
+  border-radius: 0.5rem
   color: white
-  // border-radius: 0.5rem
+  padding: .5rem
+
+.tippy-arrow
+  width: 1rem
+  height: 1rem
+  border-top: 0.5rem solid
+  border-left: 0.5rem solid transparent
+  border-right: 0.5rem solid transparent
 
   button
     padding: 0.5rem
