@@ -10,7 +10,7 @@
   import SkillSpan from '@/components/blocks/editor/skills/SkillSpanTiptapNode.js'
   
   import { useSkills } from '@/composables/skills.composable'
-  import { onBeforeUnmount, toRefs, watch } from 'vue'
+  import { onBeforeUnmount, ref, toRefs, watch } from 'vue'
 
   const skills = useSkills ()
 
@@ -92,6 +92,20 @@
     skills.current_skill.value = skills.get_new_basic_skill ( selected_text )
     emit ( 'create:skill', selected_text )
   }
+
+  const is_skill_selected = ref ( false )
+
+  function show_menu () {
+    return ({ editor, view, state, oldState, from, to }) => {
+      console.log('BubbleMenu :: shouldShow:', editor, view, state, oldState, from, to)
+      
+      const skill_span = state.selection.$head.path.find ( node => node.type?.name === 'skill_span' )
+      console.log('skill_span',skill_span)
+      is_skill_selected.value = !!skill_span
+
+      return !!skill_span || ( from - to !== 0 )
+    }
+  }
 </script>
 
 <template>
@@ -106,11 +120,24 @@
       v-if="editor"
       :editor="editor"
       :tippy-options="{ duration: 100 }"
+      :shouldShow="show_menu ()"
       class="bubble_menu rounded"
       >
       <VBtn
+        v-if="!is_skill_selected"
+        color="black"
         @click="skill_from_selection"
         >Create Skill</VBtn>
+        <VBtn
+        v-if="is_skill_selected"
+        color="black"
+        @click="skill_from_selection"
+        >Remove Skill</VBtn>
+        <VBtn
+        v-if="is_skill_selected"
+        color="black"
+        @click="skill_from_selection"
+        >Edit Skill</VBtn>
     </BubbleMenu>
 
   </div>
