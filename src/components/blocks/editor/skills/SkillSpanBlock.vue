@@ -66,7 +66,6 @@
     :skill_id="skill_id"
     >
     <NodeViewContent class="skill_span_text" />
-    (x)
   </NodeViewWrapper>
 </template>
 
@@ -81,11 +80,4 @@
 [skill_id]
   p
     margin: 0
-
-// [skill_id*='Leader']
-//   color: gray
-
-[skill_id='All'],
-[skill_id='ALL']
-  font-weight: bold
 </style>
